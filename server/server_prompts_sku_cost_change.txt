@@ -1,0 +1,10 @@
+Context:
+- SKU: {{ sku }}
+- HTS Code: {{ hts_code }}
+- Country of Origin: {{ country }}
+- Previous Tariff Rate: {{ old_tariff }}
+- New Tariff Rate: {{ new_tariff }}
+- Landed Cost Change: {{ landed_cost_delta }}%
+
+Prompt:
+Explain to a pricing analyst why the landed cost for SKU {{ sku }} changed. Use real tariff data, reference the HTS code, and provide a recommended pricing adjustment to preserve margin.
