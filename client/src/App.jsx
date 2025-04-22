@@ -1,60 +1,39 @@
 import React, { useState } from 'react';
 import './App.css';
-
-const promptOptions = [
-  { key: "sku_cost_change", label: "SKU Price Change Explanation" },
-  { key: "customer_explanation", label: "Customer-Friendly Reason" },
-  { key: "sku_tariff_scan", label: "SKUs Needing Price Updates" }
-];
+import Dashboard from './components/Dashboard';
+import InsightForm from './components/InsightForm';
 
 function App() {
-  const [sku, setSku] = useState('');
-  const [promptKey, setPromptKey] = useState('sku_cost_change');
-  const [result, setResult] = useState('');
-
-  const handleAsk = async () => {
-    const response = await fetch('http://localhost:5000/api/ask', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sku, prompt_key: promptKey })
-    });
-    const data = await response.json();
-    setResult(data.response);
-  };
+  const [activeTab, setActiveTab] = useState('insight');
 
   return (
-    <div className="p-8 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Plicity Tariff Insight</h1>
-      
-      <label className="block font-medium mb-1">Select Insight Type</label>
-      <select
-        value={promptKey}
-        onChange={e => setPromptKey(e.target.value)}
-        className="border p-2 w-full mb-4"
-      >
-        {promptOptions.map(opt => (
-          <option key={opt.key} value={opt.key}>{opt.label}</option>
-        ))}
-      </select>
-
-      <input
-        className="border p-2 mr-2 w-full"
-        type="text"
-        placeholder="Enter SKU (e.g. VALL-3434-M14X2)"
-        value={sku}
-        onChange={e => setSku(e.target.value)}
-      />
-
-      <button className="bg-blue-600 text-white px-4 py-2 mt-2 rounded" onClick={handleAsk}>
-        Get Insight
-      </button>
-
-      {result && (
-        <div className="mt-6 bg-gray-100 p-4 rounded shadow whitespace-pre-wrap">
-          <strong>Response:</strong>
-          <div>{result}</div>
+    <div className="min-h-screen bg-slate-50 text-slate-800">
+      <header className="bg-white shadow-md sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 className="text-xl font-bold tracking-tight text-blue-700">Plicity • Tariff Intelligence</h1>
+          <div className="space-x-2">
+            <button
+              className={`px-4 py-2 rounded-md font-semibold transition ${activeTab === 'insight' ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 text-blue-600'}`}
+              onClick={() => setActiveTab('insight')}
+            >
+              🧠 Insights
+            </button>
+            <button
+              className={`px-4 py-2 rounded-md font-semibold transition ${activeTab === 'dashboard' ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 text-blue-600'}`}
+              onClick={() => setActiveTab('dashboard')}
+            >
+              📊 Dashboard
+            </button>
+          </div>
         </div>
-      )}
+      </header>
+
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        <div className="bg-white shadow rounded-xl p-6 transition-all">
+          {activeTab === 'insight' && <InsightForm />}
+          {activeTab === 'dashboard' && <Dashboard />}
+        </div>
+      </main>
     </div>
   );
 }
